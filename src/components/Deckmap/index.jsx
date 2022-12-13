@@ -212,7 +212,7 @@ export default function Deckmap() {
   }
   function handleonedit_area({ updatedData, editType }) {
     if (editType == 'addFeature') {
-      setdrawMode(1)
+      //setdrawMode(1)
       updatedData.features = [updatedData.features[updatedData.features.length - 1]]
       console.log(updatedData)
       setselected_area(
