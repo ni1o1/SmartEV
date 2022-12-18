@@ -1,24 +1,44 @@
 
-import React, { useState, useEffect } from 'react'
-import { Tabs, Layout, Button, Menu, Switch } from 'antd';
-import Charge from '../Charge';
+import React, { useState ,useCallback} from 'react'
+import { Tabs, Layout, Button, Menu } from 'antd';
+import Areapowerload from '../Areapowerload';
 import Visualcamera from '../Visualcamera';
-import { useSubscribe, useUnsubscribe } from '@/utils/usePubSub';
+import Chargeheatmap from '../Chargeheatmap';
 
 import {
   SettingOutlined,
   MenuUnfoldOutlined, MenuFoldOutlined,  NodeIndexOutlined
 } from '@ant-design/icons';
 import './index.css';
-
+//redux
+import { useDispatch, useMappedState } from 'redux-react-hook'
+import {
+  setactivepage_tmp
+} from '@/redux/actions/evdata'
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
 const { Sider, Content } = Layout;
 
 export default function Panelpage() {
 
+  /*
+    ---------------redux中取出变量---------------
+  */
+  //#region
+  const mapState = useCallback(
+    state => ({
+      evdata: state.evdata,
+      Visualcamera: state.Visualcamera
+    }),
+    []
+  );
+  const { Visualcamera, evdata } = useMappedState(mapState);
+  const { activepage } = evdata
+  const dispatch = useDispatch()
+  const setactivepage = (data) => {
+    dispatch(setactivepage_tmp(data))
+  }
 
-  const unsubscribe = useUnsubscribe();//清除更新组件重复订阅的副作用
   //定义Hooks
   const [collapsed, setCollapsed] = useState(true);
 
@@ -39,7 +59,7 @@ export default function Panelpage() {
     <Menu 
       mode="inline"
       onClick={handleClick}
-      defaultSelectedKeys={['Charge']}
+      defaultSelectedKeys={['Areapowerload']}
       style={{
         borderRight: 0,
         'overflowX': 'hidden',
@@ -47,7 +67,9 @@ export default function Panelpage() {
       }}
     >
       <SubMenu key="sub1" icon={<NodeIndexOutlined />} title="充放电需求分析">
-        <Menu.Item key="Charge" icon={<NodeIndexOutlined />}>充电需求</Menu.Item>
+        <Menu.Item key="Areapowerload" icon={<NodeIndexOutlined />}>区域充电需求时变</Menu.Item>
+        <Menu.Item key="Chargeheatmap" icon={<NodeIndexOutlined />}>充电需求热力图</Menu.Item>
+        <Menu.Item key="Discharge" icon={<NodeIndexOutlined />}>放电需求</Menu.Item>
       </SubMenu>
       <SubMenu key="sub2" icon={<SettingOutlined />} title="设置">
         <Menu.Item key="Visualcamera" icon={<span className="iconfont icon-vedio" />}>视角设置</Menu.Item>
@@ -59,21 +81,17 @@ export default function Panelpage() {
   </Sider>
 
   )
-  const [activepage, setactivepage] = useState('Charge')
-
-  //订阅activepage，检测到activepage一但改变，就更新tab
-  unsubscribe('activepage')
-  useSubscribe('activepage', function (msg: any, data: any) {
-    setactivepage(data)
-  });
 
 
   return (
     <Layout>
       <Content>
         <Tabs tabPosition="left" size='small' renderTabBar={(a, b) => menu} activeKey={activepage}>
-          <TabPane key="Charge" >
-            <Charge />
+          <TabPane key="Areapowerload" >
+            <Areapowerload />
+          </TabPane>
+          <TabPane key="Chargeheatmap" >
+          <Chargeheatmap/>
           </TabPane>
           <TabPane key="Visualcamera" >
             <Visualcamera />

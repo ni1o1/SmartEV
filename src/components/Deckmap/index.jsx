@@ -6,11 +6,8 @@ import DeckGL from '@deck.gl/react';
 import { useSubscribe, usePublish, useUnsubscribe } from '@/utils/usePubSub';
 import { useInterval } from 'ahooks';
 import { AmbientLight, LightingEffect, MapView, FirstPersonView, _SunLight as SunLight } from '@deck.gl/core';
-import { BitmapLayer, IconLayer } from '@deck.gl/layers';
-import { TileLayer, TerrainLayer } from '@deck.gl/geo-layers';
-import { PolygonLayer } from '@deck.gl/layers';
-import { Tile3DLayer } from '@deck.gl/geo-layers';
-import { I3SLoader } from '@loaders.gl/i3s';
+import { IconLayer } from '@deck.gl/layers';
+import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 //redux
 import { useDispatch, useMappedState } from 'redux-react-hook'
 //镜头redux
@@ -42,7 +39,10 @@ export default function Deckmap() {
     []
   );
   const { Visualcamera, evdata } = useMappedState(mapState);
-  const { charged_power, selected_area, drawMode } = evdata
+  const { charged_power, selected_area, drawMode, heatmap_data,
+    radiusPixels,
+    intensity,
+    threshold,activepage } = evdata
   //dispatch
   const dispatch = useDispatch()
 
@@ -212,9 +212,8 @@ export default function Deckmap() {
   }
   function handleonedit_area({ updatedData, editType }) {
     if (editType == 'addFeature') {
-      //setdrawMode(1)
+      setdrawMode(1)
       updatedData.features = [updatedData.features[updatedData.features.length - 1]]
-      console.log(updatedData)
       setselected_area(
         updatedData
       )
@@ -253,6 +252,18 @@ export default function Deckmap() {
       getFillColor: [68, 142, 247],
       getLineColor: [68, 142, 247]
     }),
+    activepage=='Chargeheatmap'?new HeatmapLayer({
+      data: heatmap_data,
+      id: 'heatmp-layer',
+      pickable: false,
+      getPosition: d => [d.lon, d.lat],
+      getWeight: d => {
+        return d.power
+      },
+      radiusPixels,
+      intensity,
+      threshold
+    }): null
   ];
   //#endregion
   /*

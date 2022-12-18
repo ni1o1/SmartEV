@@ -5,8 +5,12 @@ const initState = {
         type: 'FeatureCollection',
         features: [],
     },
-
-    drawMode: 0
+    drawMode: 1,
+    heatmap_data: [],
+    radiusPixels: 15,
+    intensity: 1,
+    threshold: 0.03,
+    activepage: 'Areapowerload'
 }
 export default function trajReducer(preState = initState, action) {
     const { type, data } = action
@@ -19,6 +23,16 @@ export default function trajReducer(preState = initState, action) {
             return {...preState, drawMode: data }
         case 'setpotential_power':
             return {...preState, potential_power: data }
+        case 'setheatmap_data':
+            return {...preState, heatmap_data: data }
+        case 'setradiusPixels':
+            return {...preState, radiusPixels: data }
+        case 'setintensity':
+            return {...preState, intensity: data }
+        case 'setthreshold':
+            return {...preState, threshold: data }
+        case 'setactivepage':
+            return {...preState, activepage: data }
         default:
             return preState;
     }

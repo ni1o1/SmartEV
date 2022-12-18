@@ -1,17 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { Form, InputNumber, Table, Alert, Col, Card, Slider, Row, Collapse, Tooltip, Button, message, AutoComplete, Upload } from 'antd';
-import {
-    InfoCircleOutlined, CaretRightOutlined, PauseOutlined
-} from '@ant-design/icons';
+import { Form, InputNumber, Table, Alert, Col, Card, Row, Collapse, Button } from 'antd';
+
 //redux
 import { useDispatch, useMappedState } from 'redux-react-hook'
-import { useSubscribe, usePublish, useUnsubscribe } from '@/utils/usePubSub';
 //redux变量控制
 import {
     setviewStates_tmp,
     setfpvsize_tmp
 } from '@/redux/actions/Visualcamera'
-import axios from "axios";
 import { useInterval } from 'ahooks';
 import { publish } from 'pubsub-js';
 
@@ -29,7 +25,7 @@ export default function Visualcamera() {
         }),
         []
     );
-    const {  Visualcamera } = useMappedState(mapState);
+    const { Visualcamera } = useMappedState(mapState);
     const { fpvsize, viewStates } = Visualcamera
     //dispatch
     const dispatch = useDispatch()
@@ -66,19 +62,6 @@ export default function Visualcamera() {
   */
     //#region
     const [cameradata, setcameradata] = useState([])
-    //上传的线路信息
-    const handleuploaddata = (file) => {
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.readAsText(file)
-            reader.onload = function (f) {
-                const data = JSON.parse(f.target.result)
-                setcameradata(data)
-                setViewStates_form(data[0])
-
-            }
-        })
-    }
 
     //播放
     const [interval, setInterval] = useState(undefined);
@@ -157,12 +140,12 @@ export default function Visualcamera() {
     function readURL(file) {
         var reader = new FileReader()
         reader.readAsText(file.target.files[0])
-        reader.onload = function(f) {
+        reader.onload = function (f) {
             const data = JSON.parse(f.target.result)
             setcameradata(data)
             setViewStates_form(data[0])
         }
-      }
+    }
     //#endregion
     /*
     ---------------渲染页面---------------
@@ -243,7 +226,7 @@ export default function Visualcamera() {
                                                 <InputNumber id="height" min={1} max={100} step={5} />
                                             </Form.Item>
                                         </Col>
-                                        
+
                                     </Row>
                                 </Form>
                             </Panel>

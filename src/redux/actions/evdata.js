@@ -2,3 +2,8 @@ export const setcharged_power_tmp = data => ({ type: 'setcharged_power', data: d
 export const setselected_area_tmp = data => ({ type: 'setselected_area', data: data })
 export const setdrawMode_tmp = data => ({ type: 'setdrawMode', data: data })
 export const setpotential_power_tmp = data => ({ type: 'setpotential_power', data: data })
+export const setheatmap_data_tmp = data => ({ type: 'setheatmap_data', data })
+export const setradiusPixels_tmp = data => ({ type: 'setradiusPixels', data })
+export const setintensity_tmp = data => ({ type: 'setintensity', data })
+export const setthreshold_tmp = data => ({ type: 'setthreshold', data })
+export const setactivepage_tmp = data => ({ type: 'setactivepage', data })
