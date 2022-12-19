@@ -27,12 +27,11 @@ export default function Panelpage() {
   //#region
   const mapState = useCallback(
     state => ({
-      evdata: state.evdata,
-      Visualcamera: state.Visualcamera
+      evdata: state.evdata
     }),
     []
   );
-  const { Visualcamera, evdata } = useMappedState(mapState);
+  const { evdata } = useMappedState(mapState);
   const { activepage } = evdata
   const dispatch = useDispatch()
   const setactivepage = (data) => {

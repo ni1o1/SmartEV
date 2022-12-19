@@ -7,9 +7,9 @@ const initState = {
     },
     drawMode: 1,
     heatmap_data: [],
-    radiusPixels: 15,
-    intensity: 1,
-    threshold: 0.03,
+    radiusPixels: 30,
+    intensity: 1.5,
+    threshold: 0.3,
     activepage: 'Areapowerload'
 }
 export default function trajReducer(preState = initState, action) {

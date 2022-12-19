@@ -91,6 +91,10 @@ export default function Areapowerload() {
         }
         //日期筛选
         chargedata = chargedata.filter(f => weekdays.indexOf(f.weekday) != -1)
+
+        //聚合
+        //chargedata = dfd.toJSON(new dfd.DataFrame(chargedata).loc({ columns: ['lon', 'lat', 'power'] }).groupby(['lon', 'lat']).sum().rename({ "power_sum": "power" }))
+        
         setheatmap_data(chargedata)
 
     }, [chargetype, starttime, endtime, weekdays])
@@ -181,7 +185,7 @@ export default function Areapowerload() {
                                         style={{
                                             width: '200px',
                                         }}
-                                        min={0}
+                                        min={0.01}
                                         max={1}
                                         onChange={setthreshold}
                                         value={threshold}

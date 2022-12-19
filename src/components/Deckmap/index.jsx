@@ -125,10 +125,10 @@ export default function Deckmap() {
       firstPerson: viewStates.firstPerson,
       baseMap: {
         ...viewStates.baseMap,
-        longitude: 121.4,
-        latitude: 31.28,
-        zoom: 9,
-        pitch: 45
+        longitude: 121.23,
+        latitude: 31.18,
+        zoom: 10,
+        pitch: 0
       }
     })
   }, [])
