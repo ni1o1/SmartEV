@@ -14,13 +14,16 @@ import { useDispatch, useMappedState } from 'redux-react-hook'
 import {
   setviewStates_tmp
 } from '@/redux/actions/Visualcamera'
+import { GeoJsonLayer } from '@deck.gl/layers';
 
-
+import { scaleLinear } from 'd3-scale';
 import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
 import {
   setselected_area_tmp,
-  setdrawMode_tmp
+  setdrawMode_tmp,
+  setstationcoordinates_tmp
 } from '@/redux/actions/evdata'
+import * as turf from '@turf/turf'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibmkxbzEiLCJhIjoiY2t3ZDgzMmR5NDF4czJ1cm84Z3NqOGt3OSJ9.yOYP6pxDzXzhbHfyk3uORg';
 
@@ -39,10 +42,12 @@ export default function Deckmap() {
     []
   );
   const { Visualcamera, evdata } = useMappedState(mapState);
-  const { charged_power, selected_area, drawMode, heatmap_data,
+  const { selected_area, drawMode, heatmap_data,
     radiusPixels,
     intensity,
-    threshold,activepage } = evdata
+    threshold, activepage,
+    chargestations, vmin, vmax,chargeradius,stationcoordinates
+  } = evdata
   //dispatch
   const dispatch = useDispatch()
 
@@ -221,10 +226,57 @@ export default function Deckmap() {
   }
   //#endregion
   /*
-  ---------------地图图层设置---------------
+  ---------------Tooltip设置---------------
+  */
+  //#region
+  function getTooltip(info) {
+    if (info.layer) {
+      if (info.layer.id == "chargestation-layer") {
+        const { object } = info
+        return object && `\
+        站点ID：${object.properties.stationId}
+        电量需求：${object.properties.charged_power.toFixed()}kwh
+        `
+      }
+    }
+
+  }
+  //#endregion
+  /*
+  ---------------充电站colormap设置---------------
   */
   //#region
 
+  
+  //colormap的设置
+  const cmap = (v, vminval, vmaxval) => {
+    const COLOR_SCALE = scaleLinear()
+      .domain([0, 0.25, 0.5, 0.75, 1])
+      .range(['#9DCC42', '#FFFE03', '#F7941D', '#E9420E', '#FF0000']);
+    //norm
+    const WIDTH_SCALE = scaleLinear()
+      .clamp(true)
+      .domain([vminval, vmaxval])
+      .range([0, 1]);
+    try {
+      return COLOR_SCALE(WIDTH_SCALE(v)).match(/\d+/g).map(f => parseInt(f))
+    } catch { return null }
+  }
+
+  const setstationcoordinates = (data) => {
+    dispatch(setstationcoordinates_tmp(data))
+}
+  const showChargestationinfo = (info) => {
+    const { object } = info
+    setstationcoordinates(object.geometry.coordinates
+    )
+  }
+
+  //#endregion
+  /*
+  ---------------地图图层设置---------------
+  */
+  //#region
   const layers = [
     fristperson_isshow ? new IconLayer({//第一人称位置
       id: 'ref-point',
@@ -243,7 +295,7 @@ export default function Deckmap() {
       getColor: d => d.color
     }) : null,
     new EditableGeoJsonLayer({//选择区域
-      id: 'geojson-layer',
+      id: 'Edit-geojson-layer',
       data: selected_area,
       mode: drawMode == 1 ? ViewMode : DrawPolygonMode,
       selectedFeatureIndexes,
@@ -252,7 +304,7 @@ export default function Deckmap() {
       getFillColor: [68, 142, 247],
       getLineColor: [68, 142, 247]
     }),
-    activepage=='Chargeheatmap'?new HeatmapLayer({
+    activepage == 'Chargeheatmap' ? new HeatmapLayer({
       data: heatmap_data,
       id: 'heatmp-layer',
       pickable: false,
@@ -263,8 +315,24 @@ export default function Deckmap() {
       radiusPixels,
       intensity,
       threshold
-    }): null
-  ];
+    }) : null,
+    activepage == 'Chargestation' && new GeoJsonLayer({
+      id: 'chargestation-layer',
+      data: chargestations,
+      pickable: true,
+      stroked: false,
+      filled: true,
+      extruded: true,
+      pointType: 'circle',
+      lineWidthScale: 20,
+      lineWidthMinPixels: 2,
+      getFillColor: d => cmap(d.properties.charged_power, vmin, vmax),
+      getPointRadius: d => Math.max(d.properties.charged_power / 10, 80),
+      getLineWidth: 1,
+      getElevation: 30,
+      onClick: showChargestationinfo,
+    })
+  ]
   //#endregion
   /*
   ---------------渲染地图---------------
@@ -304,6 +372,7 @@ export default function Deckmap() {
       style={{ zIndex: 0 }}
       ContextProvider={MapContext.Provider}
       onViewStateChange={onViewStateChange}
+      getTooltip={getTooltip}
     >
       <MapView id="baseMap"
         controller={true}

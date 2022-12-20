@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import ReactECharts from 'echarts-for-react';
-import { Button, Col, Card, Collapse, Tooltip, message } from 'antd';
+import { Button, Col, Card, Collapse, Tooltip,Alert,Row, message } from 'antd';
 import {
     InfoCircleOutlined
 } from '@ant-design/icons';
@@ -8,7 +8,6 @@ import {
 //redux
 import { useDispatch, useMappedState } from 'redux-react-hook'
 import {
-
     setselected_area_tmp,
     setcharged_power_tmp,
     setpotential_power_tmp,
@@ -120,7 +119,7 @@ export default function Areapowerload() {
                 //可视化
                 setEchartsOption({
                     title: {
-                        text: '实际充电需求'
+                        text: '实际充电负荷'
                     },
                     grid: {
                         left: '5%',
@@ -192,7 +191,7 @@ export default function Areapowerload() {
                 //可视化
                 setEchartsOption2({
                     title: {
-                        text: '潜在充电需求'
+                        text: '潜在充电负荷'
                     },
                     grid: {
                         left: '5%',
@@ -300,9 +299,19 @@ export default function Areapowerload() {
             <Col span={24}>
                 <Card title="区域充电需求时变" extra={<Tooltip title='Click on the bars to show trajectories.'><InfoCircleOutlined /></Tooltip>}
                     bordered={false}>
+                    {selected_area.features.length == 0 ? <>
+                        <Row>
+                            <Alert
+                                message="点击地图选区按钮，并在地图上创建区域"
+                                type="info"
+                                showIcon
+                            />
+                        </Row>
+                        <br />
+                    </> : null}
                     <Collapse defaultActiveKey={['panel1']}>
                         <Panel header="区域负荷曲线" key="panel1">
-                            <Button onClick={CreateArea} disabled={!drawMode}>选择区域</Button>
+                            <Button onClick={CreateArea} disabled={!drawMode}>地图选区</Button>
                             <Button onClick={ClearArea} disabled={selected_area.features.length == 0}>清除区域</Button>
                             <ReactECharts
                                 option={option}

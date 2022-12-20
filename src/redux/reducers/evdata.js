@@ -10,7 +10,15 @@ const initState = {
     radiusPixels: 30,
     intensity: 1.5,
     threshold: 0.3,
-    activepage: 'Areapowerload'
+    activepage: 'Areapowerload',
+    chargestations: { //空白选区
+        type: 'FeatureCollection',
+        features: [],
+    },
+    vmin: 0,
+    vmax: 500,
+    chargeradius: 0.5,
+    stationcoordinates: []
 }
 export default function trajReducer(preState = initState, action) {
     const { type, data } = action
@@ -33,6 +41,16 @@ export default function trajReducer(preState = initState, action) {
             return {...preState, threshold: data }
         case 'setactivepage':
             return {...preState, activepage: data }
+        case 'setchargestations':
+            return {...preState, chargestations: data }
+        case 'setvmin':
+            return {...preState, vmin: data }
+        case 'setvmax':
+            return {...preState, vmax: data }
+        case 'setchargeradius':
+            return {...preState, chargeradius: data }
+        case 'setstationcoordinates':
+            return {...preState, stationcoordinates: data }
         default:
             return preState;
     }

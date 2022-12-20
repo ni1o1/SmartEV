@@ -1,13 +1,13 @@
 
-import React, { useState ,useCallback} from 'react'
+import React, { useState, useCallback } from 'react'
 import { Tabs, Layout, Button, Menu } from 'antd';
 import Areapowerload from '../Areapowerload';
 import Visualcamera from '../Visualcamera';
 import Chargeheatmap from '../Chargeheatmap';
-
+import Chargestation from '../Chargestation';
 import {
   SettingOutlined,
-  MenuUnfoldOutlined, MenuFoldOutlined,  NodeIndexOutlined
+  MenuUnfoldOutlined, MenuFoldOutlined, NodeIndexOutlined
 } from '@ant-design/icons';
 import './index.css';
 //redux
@@ -55,7 +55,7 @@ export default function Panelpage() {
     onCollapse={toggleCollapsed}
     theme='light'
   >
-    <Menu 
+    <Menu
       mode="inline"
       onClick={handleClick}
       defaultSelectedKeys={['Areapowerload']}
@@ -68,7 +68,8 @@ export default function Panelpage() {
       <SubMenu key="sub1" icon={<span className="iconfont icon-charge" />} title="充放电需求分析">
         <Menu.Item key="Areapowerload" icon={<span className="iconfont icon-lineplot" />}>区域充电需求时变</Menu.Item>
         <Menu.Item key="Chargeheatmap" icon={<span className="iconfont icon-heatmap" />}>充电需求热力图</Menu.Item>
-        <Menu.Item key="Discharge" icon={<NodeIndexOutlined />}>放电需求</Menu.Item>
+        <Menu.Item key="Chargestation" icon={<span className="iconfont icon-charge" />}>充电站供需分析</Menu.Item>
+{/*         <Menu.Item key="Discharge" icon={<NodeIndexOutlined />}>放电需求</Menu.Item> */}
       </SubMenu>
       <SubMenu key="sub2" icon={<SettingOutlined />} title="设置">
         <Menu.Item key="Visualcamera" icon={<span className="iconfont icon-vedio" />}>视角设置</Menu.Item>
@@ -90,7 +91,10 @@ export default function Panelpage() {
             <Areapowerload />
           </TabPane>
           <TabPane key="Chargeheatmap" >
-          <Chargeheatmap/>
+            <Chargeheatmap />
+          </TabPane>
+          <TabPane key="Chargestation" >
+            <Chargestation />
           </TabPane>
           <TabPane key="Visualcamera" >
             <Visualcamera />
