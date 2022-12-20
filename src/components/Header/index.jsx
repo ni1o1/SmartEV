@@ -54,7 +54,6 @@ export default function Header(props) {
             </PageHeader> : <Button key='navicollapsed' type="text" onClick={toggleCollapsed}>
                 {React.createElement(collapsed ? UpOutlined : DownOutlined)}
             </Button>}
-
         </>
     )
 }

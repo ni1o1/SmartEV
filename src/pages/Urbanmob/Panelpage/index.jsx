@@ -65,9 +65,9 @@ export default function Panelpage() {
         'overflowY': 'auto'
       }}
     >
-      <SubMenu key="sub1" icon={<NodeIndexOutlined />} title="充放电需求分析">
-        <Menu.Item key="Areapowerload" icon={<NodeIndexOutlined />}>区域充电需求时变</Menu.Item>
-        <Menu.Item key="Chargeheatmap" icon={<NodeIndexOutlined />}>充电需求热力图</Menu.Item>
+      <SubMenu key="sub1" icon={<span className="iconfont icon-charge" />} title="充放电需求分析">
+        <Menu.Item key="Areapowerload" icon={<span className="iconfont icon-lineplot" />}>区域充电需求时变</Menu.Item>
+        <Menu.Item key="Chargeheatmap" icon={<span className="iconfont icon-heatmap" />}>充电需求热力图</Menu.Item>
         <Menu.Item key="Discharge" icon={<NodeIndexOutlined />}>放电需求</Menu.Item>
       </SubMenu>
       <SubMenu key="sub2" icon={<SettingOutlined />} title="设置">

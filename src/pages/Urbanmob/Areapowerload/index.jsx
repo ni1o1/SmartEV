@@ -17,6 +17,8 @@ import {
 import axios from 'axios';
 import * as dfd from "danfojs";
 import * as turf from '@turf/turf'
+import { downloadFile } from '@/utils/downloadFile';
+
 const { Panel } = Collapse;
 export default function Areapowerload() {
 
@@ -74,10 +76,11 @@ export default function Areapowerload() {
     //如果选区发生改变
     useEffect(() => {
         //数据集计
-        if (charged_power.length > 0) {
-            let charged_power_selected = []
-            //进行区域筛选
-            if (selected_area.features.length > 0) {
+        if (selected_area.features.length > 0) {
+            if (charged_power.length > 0) {
+                let charged_power_selected = []
+                //进行区域筛选
+
                 charged_power_selected = charged_power.filter(f => {
                     return turf.booleanPointInPolygon(turf.point([f.lon, f.lat]), selected_area.features[0])
                 })
@@ -112,6 +115,7 @@ export default function Areapowerload() {
                         }
                     }
                 )
+
                 //可视化
                 setEchartsOption({
                     title: {
@@ -143,13 +147,13 @@ export default function Areapowerload() {
                     },
                     series: linesdata
                 })
+
             }
-        }
-        //数据集计
-        if (potential_power.length > 0) {
-            let potential_power_selected = []
-            //进行区域筛选
-            if (selected_area.features.length > 0) {
+            //数据集计
+            if (potential_power.length > 0) {
+                let potential_power_selected = []
+                //进行区域筛选
+
                 potential_power_selected = potential_power.filter(f => {
                     return turf.booleanPointInPolygon(turf.point([f.lon, f.lat]), selected_area.features[0])
                 })
@@ -218,6 +222,75 @@ export default function Areapowerload() {
                     series: linesdata
                 })
             }
+        } else {
+            axios.get(`data/charge_linesdata.json`).then(response => {
+                const linesdata = response.data
+                setEchartsOption({
+                    title: {
+                        text: '实际充电需求'
+                    },
+                    grid: {
+                        left: '5%',
+                        right: '4%',
+                        top: '20%',
+                        bottom: '5%',
+                        containLabel: true
+                    },
+                    legend: {
+                        top: '10%',
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    },
+                    xAxis: {
+                        name: '小时',
+                        type: 'category',
+                        nameLocation: 'middle',
+                        nameGap: 20,
+                        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                    },
+                    yAxis: {
+                        name: '充电需求(kwh)',
+                        nameLocation: 'middle',
+                        nameGap: 50,
+                        type: 'value'
+                    },
+                    series: linesdata
+                })
+            })
+            axios.get(`data/potential_linesdata.json`).then(response => {
+                const linesdata = response.data
+                setEchartsOption2({
+                    title: {
+                        text: '潜在充电需求'
+                    },
+                    grid: {
+                        left: '5%',
+                        right: '4%',
+                        top: '20%',
+                        bottom: '5%',
+                        containLabel: true
+                    },
+                    legend: {
+
+                        top: '10%',
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    },
+                    xAxis: {
+                        name: '小时',
+                        type: 'category',
+                        nameLocation: 'middle',
+                        nameGap: 20,
+                        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                    },
+                    yAxis: {
+                        name: '充电需求(kwh)',
+                        nameLocation: 'middle',
+                        nameGap: 50,
+                        type: 'value'
+                    },
+                    series: linesdata
+                })
+            })
+
         }
 
     }, [selected_area])
