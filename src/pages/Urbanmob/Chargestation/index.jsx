@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import ReactECharts from 'echarts-for-react';
-import { Button, Col, Card, Collapse, Tooltip, message, Select, Row, Space, Slider, Alert,InputNumber } from 'antd';
+import { Button, Col, Card, Collapse, Tooltip, message, Select, Row, Space, Slider, Alert, InputNumber } from 'antd';
 
 import {
     InfoCircleOutlined
@@ -81,12 +81,22 @@ export default function Areapowerload() {
                 })
 
                 //集计
+                console.log(charged_power_selected)
                 const charged_power_df = new dfd.DataFrame(charged_power_selected)
                 const charged_power_selected_weekday = new dfd.DataFrame(charged_power_selected.filter(f => f.weekday < 5))
                 const charged_power_selected_weekend = new dfd.DataFrame(charged_power_selected.filter(f => f.weekday >= 5))
-                const charged_power_agg_weekday = dfd.toJSON(charged_power_selected_weekday.loc({ columns: ['hour', 'charged_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'charged_power_mean': 'power' }))
-                const charged_power_agg_weekend = dfd.toJSON(charged_power_selected_weekend.loc({ columns: ['hour', 'charged_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'charged_power_mean': 'power' }))
-
+                let charged_power_agg_weekday
+                if (charged_power_selected_weekday.$data.length > 0) {
+                    charged_power_agg_weekday = dfd.toJSON(charged_power_selected_weekday.loc({ columns: ['hour', 'charged_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'charged_power_mean': 'power' }))
+                } else {
+                    charged_power_agg_weekday = []
+                }
+                let charged_power_agg_weekend
+                if (charged_power_selected_weekend.$data.length > 0) {
+                    charged_power_agg_weekend = dfd.toJSON(charged_power_selected_weekend.loc({ columns: ['hour', 'charged_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'charged_power_mean': 'power' }))
+                } else {
+                    charged_power_agg_weekend = []
+                }
                 const weekday_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23].map(hour => {
                     const thisdata = charged_power_agg_weekday.filter(h => h.hour === hour)
                     if (thisdata.length > 0) {
@@ -174,9 +184,21 @@ export default function Areapowerload() {
                 //集计
                 const potential_power_selected_weekday = new dfd.DataFrame(potential_power_selected.filter(f => f.weekday < 5))
                 const potential_power_selected_weekend = new dfd.DataFrame(potential_power_selected.filter(f => f.weekday >= 5))
-                const potential_power_agg_weekday = dfd.toJSON(potential_power_selected_weekday.loc({ columns: ['hour', 'potential_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'potential_power_mean': 'power' }))
-                const potential_power_agg_weekend = dfd.toJSON(potential_power_selected_weekend.loc({ columns: ['hour', 'potential_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'potential_power_mean': 'power' }))
 
+                let potential_power_agg_weekday
+                if (potential_power_selected_weekday.$data.length > 0) {
+                    potential_power_agg_weekday = dfd.toJSON(potential_power_selected_weekday.loc({ columns: ['hour', 'potential_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'potential_power_mean': 'power' }))
+                } else {
+                    potential_power_agg_weekday = []
+                }
+
+                let potential_power_agg_weekend
+                console.log(potential_power_selected_weekend)
+                if (potential_power_selected_weekend.$data.length > 0) {
+                    potential_power_agg_weekend = dfd.toJSON(potential_power_selected_weekend.loc({ columns: ['hour', 'potential_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'potential_power_mean': 'power' }))
+                } else {
+                    potential_power_agg_weekend = []
+                }
                 const weekday_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23].map(hour => {
                     const thisdata = potential_power_agg_weekday.filter(h => h.hour === hour)
                     if (thisdata.length > 0) {
