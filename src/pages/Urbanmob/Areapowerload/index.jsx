@@ -76,6 +76,8 @@ export default function Areapowerload() {
     //如果选区发生改变
     useEffect(() => {
         //数据集计
+        //const colors = ['#cadeea', '#a6bdd7', '#899dc2', '#737fad', '#5b5d8d', '#423b67', '#281e3b']
+        const colors = ['#cadeea', '#a6bdd7', '#899dc2', '#737fad', '#5b5d8d', '#bf8a9d', '#ac89a3']
         if (selected_area.features.length > 0) {
             if (charged_power.length > 0) {
                 let charged_power_selected = []
@@ -89,7 +91,6 @@ export default function Areapowerload() {
                 const charged_power_df = new dfd.DataFrame(charged_power_selected)
                 const charged_power_agg_data = dfd.toJSON(charged_power_df.loc({ columns: ['weekday', 'hour', 'charged_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
 
-                const colors = ['#cadeea', '#a6bdd7', '#899dc2', '#737fad', '#5b5d8d', '#423b67', '#281e3b']
                 const linesdata = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(
                     (name, index) => {
                         const values = charged_power_agg_data.filter(d => d.weekday === index)
@@ -162,7 +163,6 @@ export default function Areapowerload() {
                 const potential_power_df = new dfd.DataFrame(potential_power_selected)
                 const potential_power_agg_data = dfd.toJSON(potential_power_df.loc({ columns: ['weekday', 'hour', 'potential_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
 
-                const colors = ['#cadeea', '#a6bdd7', '#899dc2', '#737fad', '#5b5d8d', '#423b67', '#281e3b']
                 const linesdata = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(
                     (name, index) => {
                         const values = potential_power_agg_data.filter(d => d.weekday === index)

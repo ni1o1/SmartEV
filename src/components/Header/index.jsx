@@ -19,12 +19,12 @@ export default function Header(props) {
         publish('showpanel', !collapsed)
     };
     const menu = (<Menu>
-        <SubMenu key='Mapstyle' title="Mapstyle" icon={<GlobalOutlined />}>
-            <Menu.Item key="dark" onClick={() => { publish('mapstyle', "dark-v10") }}>Dark</Menu.Item>
-            <Menu.Item key="light" onClick={() => { publish('mapstyle', "light-v10") }}>Light</Menu.Item>
-            <Menu.Item key="satellite" onClick={() => { publish('mapstyle', "satellite-v9") }}>Satellite</Menu.Item>
-            <Menu.Item key="streets" onClick={() => { publish('mapstyle', "streets-v10") }}>Streets</Menu.Item>
-            <Menu.Item key="outdoors" onClick={() => { publish('mapstyle', "outdoors-v10") }}>Outdoors</Menu.Item>
+        <SubMenu key='Mapstyle' title="地图样式" icon={<GlobalOutlined />}>
+            <Menu.Item key="dark" onClick={() => { publish('mapstyle', "dark-v10") }}>黑色</Menu.Item>
+            <Menu.Item key="light" onClick={() => { publish('mapstyle', "light-v10") }}>白色</Menu.Item>
+            <Menu.Item key="satellite" onClick={() => { publish('mapstyle', "satellite-v9") }}>卫星</Menu.Item>
+            <Menu.Item key="streets" onClick={() => { publish('mapstyle', "streets-v10") }}>街道</Menu.Item>
+            <Menu.Item key="outdoors" onClick={() => { publish('mapstyle', "outdoors-v10") }}>户外</Menu.Item>
         </SubMenu>
     </Menu>
     );
