@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import ReactECharts from 'echarts-for-react';
-import { Button, Col, Card, Collapse, Tooltip, Alert, Row, message } from 'antd';
+import { Button, Col, Card, Collapse, Tooltip, Alert, Row, message, Space } from 'antd';
 import {
     InfoCircleOutlined
 } from '@ant-design/icons';
@@ -319,8 +319,11 @@ export default function Areapowerload() {
                     </> : null}
                     <Collapse defaultActiveKey={['panel1']}>
                         <Panel header="区域负荷曲线" key="panel1">
-                            <Button onClick={CreateArea} disabled={!drawMode}>地图选区</Button>
-                            <Button onClick={ClearArea} disabled={selected_area.features.length == 0}>清除区域</Button>
+                            <Space>
+                                <Button onClick={CreateArea} disabled={!drawMode}>地图选区</Button>
+                                <Button onClick={ClearArea} disabled={selected_area.features.length == 0}>清除区域</Button>
+                                {turf.area(selected_area) != 0 && ('区域面积：' + (turf.area(selected_area) / 10000000).toFixed(2) + '平方公里')}
+                            </Space>
                             <ReactECharts
                                 option={option}
                                 notMerge={true}
