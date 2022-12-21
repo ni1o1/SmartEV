@@ -17,7 +17,7 @@ import {
 import { GeoJsonLayer } from '@deck.gl/layers';
 
 import { scaleLinear } from 'd3-scale';
-import { EditableGeoJsonLayer, DrawPolygonMode, ViewMode } from 'nebula.gl';
+import { EditableGeoJsonLayer, DrawPolygonMode, DrawPointMode, ViewMode } from 'nebula.gl';
 import {
   setselected_area_tmp,
   setdrawMode_tmp,
@@ -46,7 +46,7 @@ export default function Deckmap() {
     radiusPixels,
     intensity,
     threshold, activepage,
-    chargestations, vmin, vmax,chargeradius,stationcoordinates
+    chargestations, vmin, vmax, chargeradius, stationcoordinates, drawMode_station
   } = evdata
   //dispatch
   const dispatch = useDispatch()
@@ -247,7 +247,7 @@ export default function Deckmap() {
   */
   //#region
 
-  
+
   //colormap的设置
   const cmap = (v, vminval, vmaxval) => {
     const COLOR_SCALE = scaleLinear()
@@ -265,11 +265,17 @@ export default function Deckmap() {
 
   const setstationcoordinates = (data) => {
     dispatch(setstationcoordinates_tmp(data))
-}
+  }
   const showChargestationinfo = (info) => {
     const { object } = info
     setstationcoordinates(object.geometry.coordinates
     )
+  }
+  const handleonedit_station = (e) => {
+
+    if (e.editType == "addFeature") {
+      setstationcoordinates(e.updatedData.features[0].geometry.coordinates)
+    }
   }
 
   //#endregion
@@ -327,11 +333,24 @@ export default function Deckmap() {
       lineWidthScale: 20,
       lineWidthMinPixels: 2,
       getFillColor: d => cmap(d.properties.charged_power, vmin, vmax),
-      getPointRadius: d => Math.max(d.properties.charged_power / 10, 80),
+      getPointRadius: d => Math.max(d.properties.charged_power / 10, 100),
       getLineWidth: 1,
       getElevation: 30,
       onClick: showChargestationinfo,
-    })
+    }),
+    activepage == 'Chargestation' && new EditableGeoJsonLayer({//选择充电站
+      id: 'Edit-chargestation-layer',
+      data: { //空白选区
+        type: 'FeatureCollection',
+        features: [],
+      },
+      mode: drawMode_station == 1 ? ViewMode : DrawPointMode,
+      selectedFeatureIndexes,
+      onEdit: handleonedit_station,
+      opacity: 0.5,
+      getFillColor: [68, 142, 247],
+      getLineColor: [68, 142, 247]
+    }),
   ]
   //#endregion
   /*

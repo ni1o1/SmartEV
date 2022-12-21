@@ -15,7 +15,7 @@ import {
     setvmax_tmp,
     setdrawMode_tmp,
     setchargeradius_tmp,
-    setstationcoordinates_tmp
+    setdrawMode_station_tmp
 } from '@/redux/actions/evdata'
 import axios from 'axios';
 import * as dfd from "danfojs";
@@ -59,6 +59,9 @@ export default function Areapowerload() {
     const setchargeradius = (data) => {
         dispatch(setchargeradius_tmp(data))
     }
+    const setdrawMode_station = (data) => {
+        dispatch(setdrawMode_station_tmp(data))
+    }
     useEffect(() => {
         axios.get(`data/chargstations_power.json`).then(response => {
             const val = response.data
@@ -81,8 +84,6 @@ export default function Areapowerload() {
                 })
 
                 //集计
-                console.log(charged_power_selected)
-                const charged_power_df = new dfd.DataFrame(charged_power_selected)
                 const charged_power_selected_weekday = new dfd.DataFrame(charged_power_selected.filter(f => f.weekday < 5))
                 const charged_power_selected_weekend = new dfd.DataFrame(charged_power_selected.filter(f => f.weekday >= 5))
                 let charged_power_agg_weekday
@@ -193,7 +194,6 @@ export default function Areapowerload() {
                 }
 
                 let potential_power_agg_weekend
-                console.log(potential_power_selected_weekend)
                 if (potential_power_selected_weekend.$data.length > 0) {
                     potential_power_agg_weekend = dfd.toJSON(potential_power_selected_weekend.loc({ columns: ['hour', 'potential_power'] }).groupby(['hour']).mean().sortValues('hour').rename({ 'potential_power_mean': 'power' }))
                 } else {
@@ -279,8 +279,8 @@ export default function Areapowerload() {
 
     //创建选区，取消区
     function CreateArea() {
-        message.info('编辑模式已开启，请点击地图选区，双击结束选择');
-        setdrawMode(0)
+        message.info('编辑模式已开启，请点击地图点');
+        setdrawMode_station(0)
     }
     function ClearArea() {
         setselected_area({ //空白选区
@@ -317,7 +317,9 @@ export default function Areapowerload() {
                         <Panel header="充电站供需分析" key="panel1">
                             <Space direction='vertical'>
                                 <Space>
-                                    {/* <Button onClick={CreateArea} disabled={!drawMode}>创建充电站</Button> */}
+                                    {/*                                    
+                                    <Button onClick={CreateArea} disabled={!drawMode}>创建充电站</Button>  
+                                    */}
                                     <Button onClick={ClearArea} disabled={selected_area.features.length == 0}>清除区域</Button>
                                     影响半径：
                                     <Slider

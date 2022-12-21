@@ -6,6 +6,7 @@ const initState = {
         features: [],
     },
     drawMode: 1,
+    drawMode_station: 0,
     heatmap_data: [],
     radiusPixels: 30,
     intensity: 1.5,
@@ -51,6 +52,8 @@ export default function trajReducer(preState = initState, action) {
             return {...preState, chargeradius: data }
         case 'setstationcoordinates':
             return {...preState, stationcoordinates: data }
+        case 'setdrawMode_station':
+            return {...preState, drawMode_station: data }
         default:
             return preState;
     }

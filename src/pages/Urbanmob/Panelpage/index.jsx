@@ -65,12 +65,23 @@ export default function Panelpage() {
         'overflowY': 'auto'
       }}
     >
-      <SubMenu key="sub1" icon={<span className="iconfont icon-charge" />} title="充放电需求分析">
+      <SubMenu key="sub1_1" icon={<span className="iconfont icon-lineplot" />} title="区域充电需求时变">
         <Menu.Item key="Areapowerload" icon={<span className="iconfont icon-lineplot" />}>区域充电需求时变</Menu.Item>
-        <Menu.Item key="Chargeheatmap" icon={<span className="iconfont icon-heatmap" />}>充电需求热力图</Menu.Item>
-        <Menu.Item key="Chargestation" icon={<span className="iconfont icon-charge" />}>充电站供需分析</Menu.Item>
-{/*         <Menu.Item key="Discharge" icon={<NodeIndexOutlined />}>放电需求</Menu.Item> */}
+
+
       </SubMenu>
+      <SubMenu key="sub1_2" icon={<span className="iconfont icon-heatmap" />} title="充电需求热力图">
+
+        <Menu.Item key="Chargeheatmap" icon={<span className="iconfont icon-heatmap" />}>充电需求热力图</Menu.Item>
+
+
+      </SubMenu>
+      <SubMenu key="sub1_3" icon={<span className="iconfont icon-charge" />} title="充电站供需分析">
+
+        <Menu.Item key="Chargestation" icon={<span className="iconfont icon-charge" />}>充电站供需分析</Menu.Item>
+
+      </SubMenu>
+
       <SubMenu key="sub2" icon={<SettingOutlined />} title="设置">
         <Menu.Item key="Visualcamera" icon={<span className="iconfont icon-vedio" />}>视角设置</Menu.Item>
       </SubMenu>

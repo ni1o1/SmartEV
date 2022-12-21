@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import ReactECharts from 'echarts-for-react';
-import { Button, Col, Card, Collapse, Tooltip,Alert,Row, message } from 'antd';
+import { Button, Col, Card, Collapse, Tooltip, Alert, Row, message } from 'antd';
 import {
     InfoCircleOutlined
 } from '@ant-design/icons';
@@ -87,9 +87,13 @@ export default function Areapowerload() {
                 })
 
                 //集计
-                const charged_power_df = new dfd.DataFrame(charged_power_selected)
-                const charged_power_agg_data = dfd.toJSON(charged_power_df.loc({ columns: ['weekday', 'hour', 'charged_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
-
+                let charged_power_agg_data
+                if (charged_power_selected.length > 0) {
+                    const charged_power_df = new dfd.DataFrame(charged_power_selected)
+                    charged_power_agg_data = dfd.toJSON(charged_power_df.loc({ columns: ['weekday', 'hour', 'charged_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
+                } else {
+                    charged_power_agg_data = []
+                }
                 const linesdata = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(
                     (name, index) => {
                         const values = charged_power_agg_data.filter(d => d.weekday === index)
@@ -159,9 +163,13 @@ export default function Areapowerload() {
                 })
 
                 //集计
-                const potential_power_df = new dfd.DataFrame(potential_power_selected)
-                const potential_power_agg_data = dfd.toJSON(potential_power_df.loc({ columns: ['weekday', 'hour', 'potential_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
-
+                let potential_power_agg_data
+                if (potential_power_selected.length > 0) {
+                    const potential_power_df = new dfd.DataFrame(potential_power_selected)
+                    potential_power_agg_data = dfd.toJSON(potential_power_df.loc({ columns: ['weekday', 'hour', 'potential_power'] }).groupby(['weekday', 'hour']).sum().sortValues('hour').sortValues('weekday'))
+                } else {
+                    potential_power_agg_data = []
+                }
                 const linesdata = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map(
                     (name, index) => {
                         const values = potential_power_agg_data.filter(d => d.weekday === index)
