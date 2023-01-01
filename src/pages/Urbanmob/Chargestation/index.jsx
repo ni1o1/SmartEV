@@ -119,7 +119,7 @@ export default function Areapowerload() {
                 //可视化
                 setEchartsOption({
                     title: {
-                        text: '潜在充电负荷'
+                        text: '实际充电负荷'
                     },
                     grid: {
                         left: '5%',
